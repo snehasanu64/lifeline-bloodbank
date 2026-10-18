@@ -1,0 +1,4 @@
+# These are command-line tools (seed / backup scripts and the Firestore client).
+# They must never be reachable from a browser. The PHP site itself still
+# loads Firestore.php through require, which is not affected by this rule.
+Require all denied

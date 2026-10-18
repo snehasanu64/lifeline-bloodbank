@@ -1,0 +1,4 @@
+# Never let the web server hand out the Firebase key or any JSON file.
+<FilesMatch "\.(json|env|ini|log|sql)$">
+    Require all denied
+</FilesMatch>
