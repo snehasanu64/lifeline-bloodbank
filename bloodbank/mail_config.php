@@ -15,9 +15,9 @@
  */
 
 $config = [
-    'host'       => 'smtp.gmail.com',
-    'port'       => 587,
-    'secure'     => 'tls',
+    'host'       => getenv('MAIL_HOST') ?: 'smtp.gmail.com',
+    'port'       => (int)(getenv('MAIL_PORT') ?: 587),
+    'secure'     => getenv('MAIL_SECURE') ?: 'tls', // 'tls' (587) or 'ssl' (465)
     'username'   => getenv('MAIL_USERNAME') ?: '',
     'password'   => getenv('MAIL_PASSWORD') ?: '',
     'from_email' => getenv('MAIL_USERNAME') ?: '',
@@ -34,6 +34,13 @@ $config = [
 $local = __DIR__ . '/mail_config.local.php';
 if (is_file($local)) {
     $config = array_merge($config, require $local);
+}
+
+// Google shows app passwords in groups ("abcd efgh ..."); SMTP needs them without spaces.
+$config['password'] = preg_replace('/\s+/', '', (string)$config['password']);
+$config['username'] = trim((string)$config['username']);
+if ($config['from_email'] === '') {
+    $config['from_email'] = $config['username'];
 }
 
 return $config;
