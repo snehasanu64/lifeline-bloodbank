@@ -16,3 +16,7 @@ Thumbs.db
 .DS_Store
 test_cookie.txt
 cookie.txt
+
+# Local mail credentials
+bloodbank/mail_config.local.php
+mail_config.local.php

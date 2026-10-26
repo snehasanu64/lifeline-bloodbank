@@ -105,7 +105,7 @@ php bloodbank/firebase/seed_dummy_admin.php      # demo data for the admin panel
 ```
 
 ### 5. Set up email (optional)
-Edit `bloodbank/mail_config.php` with your Gmail address and a Gmail **App password** (Google Account → Security → 2-Step Verification → App passwords). Until it is filled in, emails are skipped and the site still works.
+Copy `bloodbank/mail_config.local.example.php` to `bloodbank/mail_config.local.php` (git-ignored) and fill in your Gmail address and a Gmail **App password** (Google Account → Security → 2-Step Verification → App passwords). Until it is filled in, emails are skipped and the site still works.
 
 ### 6. Run it
 Start Apache in XAMPP and open `http://localhost/bloodbank/`.
