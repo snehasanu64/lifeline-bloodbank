@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: lifeline-bloodbank
+    runtime: docker
+    plan: free
+    envVars:
+      - key: FIREBASE_SERVICE_ACCOUNT_JSON   # paste the whole service-account JSON
+        sync: false
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_ADMIN_EMAIL
+        sync: false
+      - key: MAIL_CRON_KEY
+        generateValue: true

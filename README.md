@@ -110,6 +110,16 @@ Copy `bloodbank/mail_config.local.example.php` to `bloodbank/mail_config.local.p
 ### 6. Run it
 Start Apache in XAMPP and open `http://localhost/bloodbank/`.
 
+## ☁️ Deploy online (free, Render)
+
+Vercel does not run PHP, so use [Render](https://render.com) (free web service, Docker):
+
+1. Sign in to Render with GitHub → **New → Blueprint** → pick this repo (it reads `render.yaml`).
+2. Fill in the environment variables:
+   - `FIREBASE_SERVICE_ACCOUNT_JSON`: paste the whole contents of your `service-account.json`
+   - `MAIL_USERNAME`, `MAIL_PASSWORD` (Gmail app password), `MAIL_ADMIN_EMAIL`
+3. Deploy. The site is served from the `bloodbank/` folder. On the free plan it sleeps after inactivity, so the first visit can take about a minute.
+
 ## 🗄️ Firestore collections
 
 `donors` · `blood_requests` · `donation_appointments` · `blood_stock` · `inventory_transactions` · `blood_ledger` · `contact_messages`

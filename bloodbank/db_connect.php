@@ -16,7 +16,20 @@
 
 require_once __DIR__ . '/firebase/Firestore.php';
 
-define('SERVICE_ACCOUNT_KEY_PATH', __DIR__ . '/../service-account.json');
+// On a host without a private folder (Render, Railway…), put the key in the
+// FIREBASE_SERVICE_ACCOUNT_JSON environment variable (raw JSON, or base64 of it).
+$envKey = getenv('FIREBASE_SERVICE_ACCOUNT_JSON');
+if ($envKey !== false && $envKey !== '') {
+    $json = ($envKey[0] === '{') ? $envKey : base64_decode($envKey);
+    $keyPath = sys_get_temp_dir() . '/firebase-sa-' . md5($json) . '.json';
+    if (!is_file($keyPath)) {
+        file_put_contents($keyPath, $json);
+        @chmod($keyPath, 0600);
+    }
+    define('SERVICE_ACCOUNT_KEY_PATH', $keyPath);
+} else {
+    define('SERVICE_ACCOUNT_KEY_PATH', __DIR__ . '/../service-account.json');
+}
 
 try {
     $db = new Firestore(SERVICE_ACCOUNT_KEY_PATH);
