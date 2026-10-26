@@ -20,7 +20,25 @@ require_once __DIR__ . '/firebase/Firestore.php';
 // FIREBASE_SERVICE_ACCOUNT_JSON environment variable (raw JSON, or base64 of it).
 $envKey = getenv('FIREBASE_SERVICE_ACCOUNT_JSON');
 if ($envKey !== false && $envKey !== '') {
+    $envKey = trim($envKey, " \t\r\n\"'");
     $json = ($envKey[0] === '{') ? $envKey : base64_decode($envKey);
+    // Some hosts mangle the key's line breaks when it is pasted into a form; repair them.
+    $keyData = json_decode($json, true);
+    if (is_array($keyData) && !empty($keyData['private_key'])) {
+        $pk = str_replace(["\\r\\n", "\\n", "\r\n"], "\n", $keyData['private_key']);
+        if (strpos($pk, "\n") === false) {
+            // Newlines were dropped entirely: rebuild the PEM from its base64 body.
+            $body = preg_replace('/-----[A-Z ]+-----|\s+/', '', $pk);
+            $pk = "-----BEGIN PRIVATE KEY-----\n" . chunk_split($body, 64, "\n") . "-----END PRIVATE KEY-----\n";
+        }
+        $keyData['private_key'] = $pk;
+        $json = json_encode($keyData);
+        if (!openssl_pkey_get_private($pk)) {
+            error_log('Firebase service account: private_key in FIREBASE_SERVICE_ACCOUNT_JSON is not a valid key.');
+        }
+    } else {
+        error_log('Firebase service account: FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON (check you pasted the whole file).');
+    }
     $keyPath = sys_get_temp_dir() . '/firebase-sa-' . md5($json) . '.json';
     if (!is_file($keyPath)) {
         file_put_contents($keyPath, $json);
