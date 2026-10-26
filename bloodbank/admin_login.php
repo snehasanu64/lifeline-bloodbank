@@ -32,9 +32,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
                     ? $db->getById('admins', 'admin_' . $username)
                     : null;
 
-                // First run only: create the default admin account from the old demo
-                // credentials. Change the password afterwards (Dashboard > Change Password).
-                if (!$admin && $username === 'admin' && $password === 'bloodbank123'
+                // First run only: create the default admin account from the ADMIN_BOOTSTRAP_PASSWORD env var (if set).
+                // Change the password afterwards (Dashboard > Change Password).
+                $bootstrap = (string)getenv('ADMIN_BOOTSTRAP_PASSWORD');
+                if (!$admin && $username === 'admin' && $bootstrap !== '' && hash_equals($bootstrap, $password)
                     && !$db->getById('admins', 'admin_admin')) {
                     $db->set('admins', 'admin_admin', [
                         'username' => 'admin',

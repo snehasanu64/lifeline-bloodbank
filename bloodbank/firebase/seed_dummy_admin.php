@@ -12,7 +12,7 @@
  * Safe to run more than once: fixed IDs mean the same documents are simply
  * overwritten, never duplicated. Real data is never touched.
  *
- * All dummy donors can log in on donor.php with password:  Donor@123
+ * All dummy donors can log in on donor.php with password:  $DEMO_DONOR_PASSWORD (or the random one printed at the end)
  * Dates are relative to today, so the data always looks current.
  */
 
@@ -21,7 +21,8 @@ $db = new Firestore(__DIR__ . '/../../service-account.json');
 
 $d = fn(int $days) => date('Y-m-d', strtotime(($days >= 0 ? "+$days" : "$days") . ' days'));
 $dt = fn(int $days) => date('Y-m-d H:i:s', strtotime(($days >= 0 ? "+$days" : "$days") . ' days 10:30'));
-$passwordHash = password_hash('Donor@123', PASSWORD_DEFAULT);
+$demoPassword = getenv('DEMO_DONOR_PASSWORD') ?: bin2hex(random_bytes(6));
+$passwordHash = password_hash($demoPassword, PASSWORD_DEFAULT);
 
 // ---------------------------------------------------------------- donors
 $donors = [
@@ -126,4 +127,4 @@ foreach ($movements as $i => [$ago, $type, $srcType, $srcName, $bank, $bg, $comp
     ]);
 }
 echo "Inventory movements: " . count($movements) . "\n";
-echo "Done. Dummy donors log in with password: Donor@123\n";
+echo "Done. Dummy donors log in with password: $demoPassword\n";
