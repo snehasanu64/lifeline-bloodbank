@@ -77,6 +77,9 @@ class ServiceAccountAuth
         $jwt = $unsigned . '.' . $this->base64UrlEncode($signature);
 
         $ch = curl_init('https://oauth2.googleapis.com/token');
+        if (is_file('D:/xampp/apache/bin/curl-ca-bundle.crt')) {
+            curl_setopt($ch, CURLOPT_CAINFO, 'D:/xampp/apache/bin/curl-ca-bundle.crt'); // local XAMPP only
+        }
         curl_setopt_array($ch, [
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true,
@@ -84,7 +87,6 @@ class ServiceAccountAuth
                 'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
                 'assertion'  => $jwt,
             ]),
-            CURLOPT_CAINFO => 'D:/xampp/apache/bin/curl-ca-bundle.crt',
         ]);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

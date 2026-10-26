@@ -163,8 +163,10 @@ class Firestore
                 'Authorization: Bearer ' . $token,
                 'Content-Type: application/json',
             ],
-            CURLOPT_CAINFO => 'D:/xampp/apache/bin/curl-ca-bundle.crt',
         ];
+        if (is_file('D:/xampp/apache/bin/curl-ca-bundle.crt')) {
+            $opts[CURLOPT_CAINFO] = 'D:/xampp/apache/bin/curl-ca-bundle.crt'; // local XAMPP only
+        }
         if ($body !== null) {
             $opts[CURLOPT_POSTFIELDS] = json_encode($body);
         }
