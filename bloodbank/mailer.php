@@ -114,7 +114,9 @@ function mail_contact_received(array $m): void
         . '<p style="white-space:pre-wrap">' . mh($m['message']) . '</p>', $m['email']);
     send_mail($m['email'], 'Thank you for contacting Lifeline Blood Bank',
         '<p>Hi ' . mh($m['name']) . ',</p><p>Thank you for contacting Lifeline Blood Bank. We have received your enquiry and our team will get back to you soon.</p>'
-        . mail_rows(['Subject' => $m['subject']]));
+        . mail_rows(['Subject' => $m['subject'], 'Phone' => $m['phone'], 'Email' => $m['email']])
+        . '<p style="margin-top:14px;color:#6f5b63">Your message:</p><p style="white-space:pre-wrap;background:#fdf6f8;padding:12px;border-radius:8px">' . mh($m['message']) . '</p>'
+        . '<p>For an urgent blood requirement, please call <b>+91 99001 63000</b> instead of waiting for our reply.</p>');
 }
 
 function mail_request_received(array $r): void
