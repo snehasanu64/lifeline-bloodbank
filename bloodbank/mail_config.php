@@ -39,6 +39,7 @@ if (is_file($local)) {
 // Google shows app passwords in groups ("abcd efgh ..."); SMTP needs them without spaces.
 $config['password'] = preg_replace('/\s+/', '', (string)$config['password']);
 $config['username'] = trim((string)$config['username']);
+$config['admin_email'] = trim((string)$config['admin_email']);
 if ($config['from_email'] === '') {
     $config['from_email'] = $config['username'];
 }
